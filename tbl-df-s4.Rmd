@@ -8,7 +8,8 @@ library("knitr")
 opts_chunk$set(error = TRUE)
 ```
 
-# Background 
+# Problem
+***
 
 This is my first attempt at doing object oriented R programming. Specifically, I've declared a S4 object, TestObject, that has two slots where one of the slots (test.df) has the permitted class of a data.frame. 
 
@@ -63,3 +64,26 @@ But doing this loses the benefits of having it as a tbl_df (e.g. print a few row
 class(slot(test.object, "test.df"))
 head(slot(test.object, "test.df"))
 ```
+
+# Solutions
+***
+
+One possible solution is to make use of the [special class "ANY"](http://adv-r.had.co.nz/OO-essentials.html) so as to not restrict the class input.
+
+```{r}
+setClass("TestObject",
+  slots = list(test.mat = "matrix",
+               test.df = "ANY"))
+
+slot(test.object, "test.df") <- flights
+class(slot(test.object, "test.df"))
+head(slot(test.object, "test.df"))
+```
+
+# R Session
+***
+
+```{r session_info}
+devtools::session_info()
+```
+
