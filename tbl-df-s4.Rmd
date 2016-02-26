@@ -22,7 +22,7 @@ setClass("TestObject",
                test.df = "data.frame"))
 ```
 
-To my surprise, when I try to assign an object of tbl_class "class":
+To my surprise, when I try to assign an object of tbl_df "class":
 
 ```{r}
 library("nycflights13")
@@ -45,6 +45,8 @@ setClass("TestObject",
                test.df = "tbl_df"))
 ```
 
+But it doesn't appear to recognize it as a permitted class. 
+
 It seems that I would have to convert the tbl_df into a data.frame, in order for this work...
 
 ```{r}
@@ -53,5 +55,11 @@ setClass("TestObject",
                test.df = "data.frame"))
 
 slot(test.object, "test.df") <- as.data.frame(flights)
+```
+
+But doing this loses the benefits of having it as a tbl_df (e.g. print a few rows, all the columns fit on one screen, etc)
+
+```{r}
+class(slot(test.object, "test.df"))
 head(slot(test.object, "test.df"))
 ```

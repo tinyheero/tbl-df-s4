@@ -125,7 +125,7 @@ library(&quot;methods&quot;)
 setClass(&quot;TestObject&quot;,
   slots = list(test.mat = &quot;matrix&quot;,
                test.df = &quot;data.frame&quot;))</code></pre>
-<p>To my surprise, when I try to assign an object of tbl_class “class”:</p>
+<p>To my surprise, when I try to assign an object of tbl_df “class”:</p>
 <pre class="r"><code>library(&quot;nycflights13&quot;)
 class(flights)</code></pre>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
@@ -140,13 +140,17 @@ slot(test.object, &quot;test.df&quot;) &lt;- flights</code></pre>
                test.df = &quot;tbl_df&quot;))</code></pre>
 <pre><code>## Warning: undefined slot classes in definition of &quot;TestObject&quot;:
 ## test.df(class &quot;tbl_df&quot;)</code></pre>
+<p>But it doesn’t appear to recognize it as a permitted class.</p>
 <p>It seems that I would have to convert the tbl_df into a data.frame, in order for this work…</p>
 <pre class="r"><code>setClass(&quot;TestObject&quot;,
   slots = list(test.mat = &quot;matrix&quot;,
                test.df = &quot;data.frame&quot;))
 
-slot(test.object, &quot;test.df&quot;) &lt;- as.data.frame(flights)
-head(slot(test.object, &quot;test.df&quot;))</code></pre>
+slot(test.object, &quot;test.df&quot;) &lt;- as.data.frame(flights)</code></pre>
+<p>But doing this loses the benefits of having it as a tbl_df (e.g. print a few rows, all the columns fit on one screen, etc)</p>
+<pre class="r"><code>class(slot(test.object, &quot;test.df&quot;))</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>head(slot(test.object, &quot;test.df&quot;))</code></pre>
 <pre><code>##   year month day dep_time dep_delay arr_time arr_delay carrier tailnum
 ## 1 2013     1   1      517         2      830        11      UA  N14228
 ## 2 2013     1   1      533         4      850        20      UA  N24211
