@@ -1,0 +1,57 @@
+---
+title: "tbl_df with S4 Objects"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+---
+
+```{r}
+library("knitr")
+opts_chunk$set(error = TRUE)
+```
+
+# Background 
+
+This is my first attempt at doing object oriented R programming. Specifically, I've declared a S4 object, TestObject, that has two slots where one of the slots (test.df) has the permitted class of a data.frame. 
+
+```{r, message = FALSE}
+library("dplyr")
+library("methods")
+
+# Declare S4 Object
+setClass("TestObject",
+  slots = list(test.mat = "matrix",
+               test.df = "data.frame"))
+```
+
+To my surprise, when I try to assign an object of tbl_class "class":
+
+```{r}
+library("nycflights13")
+class(flights)
+```
+
+It throws an error:
+
+```{r}
+test.object <- new("TestObject")
+slot(test.object, "test.mat") <- matrix(rnorm(10), 5, 2)
+slot(test.object, "test.df") <- flights
+```
+
+I was under the impression that the tbl_df just wraps around a data.frame. I thought maybe I could declare the tbl_df as the permitted class for test.df:
+
+```{r}
+setClass("TestObject",
+  slots = list(test.mat = "matrix",
+               test.df = "tbl_df"))
+```
+
+It seems that I would have to convert the tbl_df into a data.frame, in order for this work...
+
+```{r}
+setClass("TestObject",
+  slots = list(test.mat = "matrix",
+               test.df = "data.frame"))
+
+slot(test.object, "test.df") <- as.data.frame(flights)
+head(slot(test.object, "test.df"))
+```
