@@ -1,4 +1,4 @@
-# tbl-df-s4'
+# tbl-df-s4
 
 Repository to test the usage of `dplyr::tbl_df` with S4.
 
